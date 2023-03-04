@@ -6,25 +6,73 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="CSS/output.css">
-        <script src="JS/script.js" defer> </script>
+        <link rel="stylesheet" type="text/css" href="/output.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"> </script>
+        <script src="/script.js" defer> </script>
+        <script src="/ednaldoh.js" defer> </script>
         <title> Ed-Nal-Doh! </title>
 
     </head>
 
 
-    <body>
+    <body class="h-screen w-screen overflow-hidden">
 
         <header>
-
+            <img src="" alt="Logo Ed-Nal-Doh!">
+            <a href="/help">
+                <button id="btn-help" class="outline-none rounded-full bg-black px-3 py-1 font-bold text-white shadow-md">
+                    ?
+                </button>
+            </a>
         </header>
 
-        <main>
-            
+        <main class="flex">
+            <div id="mao-oponente-div" class="mao-div">
+
+            </div>
+
+            <div id="jogo">
+                <div id="tabuleiro">
+
+                    <div id="campo-adversario-div" class="campo-jogo">
+                        <div class="campo-fileira">
+                            <div class="slot-carta"></div>
+                            <div class="slot-carta"></div>
+                            <div class="slot-carta"></div>
+                        </div>
+
+                        <div class="campo-fileira">
+                            <div class="slot-carta"></div>
+                            <div class="slot-carta"></div>
+                            <div class="slot-carta"></div>
+                        </div>
+                    </div>
+
+                    <div id="seu-campo-div" class="campo-jogo">
+                        <div class="campo-fileira">
+                            <div class="slot-carta"></div>
+                            <div class="slot-carta"></div>
+                            <div class="slot-carta"></div>
+                        </div>
+                        
+                        <div class="campo-fileira">
+                            <div class="slot-carta"></div>
+                            <div class="slot-carta"></div>
+                            <div class="slot-carta"></div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div id="sua-mao-div" class="mao-div">
+
+            </div>
+
         </main>
 
         <footer>
-
+            <!-- Github -->
         </footer>
         
     </body>
