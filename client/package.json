@@ -1,0 +1,33 @@
+{
+  "name": "ednaldoh",
+  "version": "0.0.1",
+  "description": "Repositório oficial do client do jogo de cartas Ed-Nal-Doh! inspirado em Yu-Gi-Oh!",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vidacalura/EdNalDoh.git"
+  },
+  "keywords": [
+    "Yu-Gi-oh!",
+    "Game",
+    "Card"
+  ],
+  "author": "vidacalura",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vidacalura/EdNalDoh/issues"
+  },
+  "homepage": "https://github.com/vidacalura/EdNalDoh#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "socket.io": "^4.6.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.2.7"
+  }
+}
