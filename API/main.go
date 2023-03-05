@@ -3,10 +3,11 @@
 package main
 
 import(
-	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,14 +31,24 @@ var salas []sala
 func main() {
 
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+        AllowMethods:     []string{"PUT", "GET", "POST", "DELETE"},
+        AllowHeaders:     []string{"*"},
+        AllowCredentials: true,
+	}))
 
+	/* Rotas */
 	r.GET("/api/jogo/:codigoSala", retornarDadosSala)
 	r.POST("/api/jogo", criarSala)
+	// r.DELETE("/api/jogo", removerSala)
 	r.GET("/api/cartas", retornarTodasCartas)
+	// r.GET("/api/jogo/usuario/:id") -> Retorna os dados de um usuário
 
-	r.Run("localhost:4000")
+	r.Run("127.0.0.1:4000")
 
 }
+
 
 func retornarDadosSala(c *gin.Context) {
 	codigoSala := c.Param("codigoSala")
@@ -86,7 +97,7 @@ func criarSala(c *gin.Context) {
 	sala := sala{ Jogador1: j1, Jogador2: j2, CodigoSala: reqBody.CodigoSala }
 	salas = append(salas, sala)
 
-	c.IndentedJSON(http.StatusOK, gin.H{ "message": "É HORA DO DUELO!" });
+	c.IndentedJSON(http.StatusOK, gin.H{ "message": "É HORA DO DUELO!", "codigoSala": reqBody.CodigoSala })
 }
 
 func retornarTodasCartas(c *gin.Context) {

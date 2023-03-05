@@ -9,7 +9,6 @@ let server = app.listen(process.env.PORT || 5000);
 app.use(express.static(__dirname + "/public/CSS/"));
 app.use(express.static(__dirname + "/public/JS/"));
 app.use(express.static(__dirname + "/public/assets/"));
-app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 /* Rotas */
@@ -45,7 +44,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        // Remover da sala
+        sairSala(socket.id);
     });
 
 });
@@ -54,16 +53,31 @@ io.on("connection", (socket) => {
 function entrarSala(id, codigoSala) {
     for (const sala of salas) {
         if (sala.codigoSala == codigoSala) {
-            // Checar se sala já está cheia
-                // Redirecionar para /
-            sala.idJogador2 = id;
-            iniciarPartida(sala);
+
+            const salaCheia = sala.idJogador1 && sala.idJogador2;
+            if (!salaCheia) {
+                sala.idJogador2 = id;
+                iniciarPartida(sala);
+                return;
+            }
+            
             return;
         }
     }
 
     const sala = new Sala(id, null, codigoSala);
     salas.push(sala);
+}
+
+function sairSala(id) {
+    for (let i = 0; i < salas.length; i++) {
+        if (salas[i].idJogador1 == id || salas[i].idJogador2 == id) {
+            io.sockets.emit("desconexaoDeAdversario", salas[i].codigoSala);
+            salas.splice(i, 1);
+            // Deletar sala na API
+            return;
+        }
+    }
 }
 
 async function iniciarPartida(sala) {
@@ -81,8 +95,7 @@ async function iniciarPartida(sala) {
     })
     .then((res) => { return res.json(); })
     .then((res) => {
-        // Enviar aos sockets da sala para remover tela de convite
-        console.log(res);
+        io.sockets.emit("iniciarPartida", (res));
     })
     .catch((err) => {
         console.log(err);

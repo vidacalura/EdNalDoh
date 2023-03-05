@@ -1,3 +1,5 @@
+// Pacote que contém todas as estruturas de
+// requests que main.go pode receber
 package main
 
 type requestCriarSala struct {
