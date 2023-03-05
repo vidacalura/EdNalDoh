@@ -3,8 +3,9 @@
 package main
 
 import(
-	"fmt"
+	//"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"github.com/gin-gonic/gin"
 )
@@ -16,11 +17,11 @@ type sala struct {
 }
 
 type jogador struct {
-	Id 		string     `json:"id"`
-	Mao     []carta    `json:"mao"`
-	Baralho [60]carta  `json:"baralho"`
-	Campo   [6]carta   `json:"campo"`
-	Vida    int 	   `json:"vida"`
+	Id 		string   `json:"id"`
+	Mao     []carta  `json:"mao"`
+	Baralho []carta  `json:"baralho"`
+	Campo   [6]carta `json:"campo"`
+	Vida    int 	 `json:"vida"`
 	//Tempo   int        `json:"tempo"`
 }
 
@@ -43,7 +44,7 @@ func retornarDadosSala(c *gin.Context) {
 
 	for i, s := range salas { 
 		if codigoSala == s.CodigoSala {
-			c.IndentedJSON(http.StatusOK, salas[i])
+			c.IndentedJSON(http.StatusOK, gin.H{ "jogador1": salas[i].Jogador1, "jogador2": salas[i].Jogador2 })
 			return
 		}
 	}
@@ -60,21 +61,36 @@ func criarSala(c *gin.Context) {
 
 	j1 := jogador{
 		Id: reqBody.IdJogador1,
-		// Mao: []carta{},
 		Baralho: baralho,
 		Vida: 2000,
 	}
 	
 	j2 := jogador{
 		Id: reqBody.IdJogador1,
-		// Mao: []carta{},
 		Baralho: baralho,
 		Vida: 2000,
 	}
 
+	for i := 0; i < 5; i++ {
+		randNum := rand.Intn(len(j1.Baralho))
+
+		j1.Mao = append(j1.Mao, j1.Baralho[randNum])
+
+		j1.Baralho[randNum] = j1.Baralho[len(j1.Baralho) - 1]
+		j1.Baralho = j1.Baralho[:len(j1.Baralho) - 1]
+	}
+
+	for i := 0; i < 5; i++ {
+		randNum := rand.Intn(len(j2.Baralho))
+
+		j2.Mao = append(j2.Mao, j2.Baralho[randNum])
+
+		j2.Baralho[randNum] = j2.Baralho[len(j2.Baralho) - 1]
+		j2.Baralho = j2.Baralho[:len(j2.Baralho) - 1]
+	}
+
 	// Registrar sala
 	sala := sala{ Jogador1: j1, Jogador2: j2, CodigoSala: reqBody.CodigoSala }
-	fmt.Println(j1)
 	salas = append(salas, sala)
 
 	c.IndentedJSON(http.StatusOK, gin.H{ "message": "É HORA DO DUELO!" });
@@ -82,4 +98,6 @@ func criarSala(c *gin.Context) {
 
 func retornarTodasCartas(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, cartas);
-} 
+}
+
+// func tirarCartaDoBaralho(baralho *[]carta) carta {}

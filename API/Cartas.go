@@ -52,7 +52,7 @@ var cartas = [30]carta{
 	constructorCarta("Nego Ney", "/assets/ednaldo0030.png", 8, 1800, 300, "0030", "none", false),
 }
 
-var baralho = [60]carta{
+var baralho = []carta{
 	cartas[0],
 	cartas[1], cartas[1], 
 	cartas[2], cartas[2], 

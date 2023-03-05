@@ -81,6 +81,7 @@ async function iniciarPartida(sala) {
     })
     .then((res) => { return res.json(); })
     .then((res) => {
+        // Enviar aos sockets da sala para remover tela de convite
         console.log(res);
     })
     .catch((err) => {
