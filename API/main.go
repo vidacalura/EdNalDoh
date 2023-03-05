@@ -3,7 +3,7 @@
 package main
 
 import(
-	//"fmt"
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -72,21 +72,14 @@ func criarSala(c *gin.Context) {
 	}
 
 	for i := 0; i < 5; i++ {
-		randNum := rand.Intn(len(j1.Baralho))
+		var cartaJ1 carta
+		var cartaJ2 carta
 
-		j1.Mao = append(j1.Mao, j1.Baralho[randNum])
+		j1.Baralho, cartaJ1 = tirarCartaDoBaralho(j1.Baralho)
+		j2.Baralho, cartaJ2 = tirarCartaDoBaralho(j2.Baralho)
 
-		j1.Baralho[randNum] = j1.Baralho[len(j1.Baralho) - 1]
-		j1.Baralho = j1.Baralho[:len(j1.Baralho) - 1]
-	}
-
-	for i := 0; i < 5; i++ {
-		randNum := rand.Intn(len(j2.Baralho))
-
-		j2.Mao = append(j2.Mao, j2.Baralho[randNum])
-
-		j2.Baralho[randNum] = j2.Baralho[len(j2.Baralho) - 1]
-		j2.Baralho = j2.Baralho[:len(j2.Baralho) - 1]
+		j1.Mao = append(j1.Mao, cartaJ1)
+		j2.Mao = append(j1.Mao, cartaJ2)
 	}
 
 	// Registrar sala
@@ -100,4 +93,12 @@ func retornarTodasCartas(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, cartas);
 }
 
-// func tirarCartaDoBaralho(baralho *[]carta) carta {}
+func tirarCartaDoBaralho(baralho []carta) ([]carta, carta) {
+	randNum := rand.Intn(len(baralho))
+	tempCard := baralho[randNum]
+
+	baralho[randNum] = baralho[len(baralho) - 1]
+	baralho = baralho[:len(baralho) - 1]
+
+	return baralho, tempCard
+}
