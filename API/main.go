@@ -3,6 +3,7 @@
 package main
 
 import(
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -15,6 +16,7 @@ type sala struct {
 	Jogador1   jogador `json:"jogador"`
 	Jogador2   jogador `json:"jogador"`
 	CodigoSala string  `json:"codigoSala"`
+	Turno 	   string  `json:"turno"`
 }
 
 type jogador struct {
@@ -43,10 +45,12 @@ func main() {
 	r.POST("/api/jogo", criarSala)
 	// r.DELETE("/api/jogo", removerSala)
 	r.GET("/api/cartas", retornarTodasCartas)
-	// r.GET("/api/jogo/usuario/:id") -> Retorna os dados de um usuário
+	r.GET("/api/jogo/usuario/:id", retornarEstadoDeJogo)
 
 	r.Run("127.0.0.1:4000")
 
+	fmt.Println("API rodando!")
+	
 }
 
 
@@ -77,7 +81,7 @@ func criarSala(c *gin.Context) {
 	}
 	
 	j2 := jogador{
-		Id: reqBody.IdJogador1,
+		Id: reqBody.IdJogador2,
 		Baralho: baralho,
 		Vida: 2000,
 	}
@@ -90,14 +94,38 @@ func criarSala(c *gin.Context) {
 		j2.Baralho, cartaJ2 = tirarCartaDoBaralho(j2.Baralho)
 
 		j1.Mao = append(j1.Mao, cartaJ1)
-		j2.Mao = append(j1.Mao, cartaJ2)
+		j2.Mao = append(j2.Mao, cartaJ2)
 	}
 
 	// Registrar sala
-	sala := sala{ Jogador1: j1, Jogador2: j2, CodigoSala: reqBody.CodigoSala }
+	sala := sala{ Jogador1: j1, Jogador2: j2, CodigoSala: reqBody.CodigoSala, Turno: j1.Id }
 	salas = append(salas, sala)
 
 	c.IndentedJSON(http.StatusOK, gin.H{ "message": "É HORA DO DUELO!", "codigoSala": reqBody.CodigoSala })
+}
+
+func retornarEstadoDeJogo(c *gin.Context) {
+	userId := c.Param("id")
+
+	for _, s := range salas {
+		if (userId == s.Jogador1.Id) {
+			j1 := jogador{ Mao: s.Jogador1.Mao, Campo: s.Jogador1.Campo, Vida: s.Jogador1.Vida }
+			j2 := jogador{ Campo: s.Jogador2.Campo, Vida: s.Jogador2.Vida }
+
+			// VULNERABILIDADE -> CLIENT RECEBE CARTAS DO ADVERSÁRIO EM CAMPO!
+			c.IndentedJSON(http.StatusOK, gin.H{ "voce": j1, "adversario": j2, "maoAdversario": len(s.Jogador2.Mao) })
+			return
+		} else if (userId == s.Jogador2.Id) {
+			j1 := jogador{ Mao: s.Jogador2.Mao, Campo: s.Jogador2.Campo, Vida: s.Jogador2.Vida }
+			j2 := jogador{ Campo: s.Jogador1.Campo, Vida: s.Jogador1.Vida }
+
+			// VULNERABILIDADE -> CLIENT RECEBE CARTAS DO ADVERSÁRIO EM CAMPO!
+			c.IndentedJSON(http.StatusOK, gin.H{ "voce": j1, "adversario": j2, "maoAdversario": len(s.Jogador1.Mao) })
+			return
+		}
+	}
+
+	c.IndentedJSON(http.StatusNotFound, gin.H{ "error": "Usuário não encontrado em nenhuma sala :(" })
 }
 
 func retornarTodasCartas(c *gin.Context) {

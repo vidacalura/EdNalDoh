@@ -10,7 +10,7 @@ header {
     @apply flex justify-between px-8 py-4;
 }
 .mao-div {
-    @apply w-[30vw] h-screen bg-gray-900 flex justify-center gap-6;
+    @apply w-[30vw] h-screen bg-gray-900 justify-center gap-6 grid grid-cols-2 grid-rows-5 p-6;
 }
 
 #convite-container {
@@ -35,8 +35,12 @@ header {
     @apply flex justify-center gap-4 pb-3 w-full;
 }
 .slot-carta {
-    @apply w-[5rem] h-[7.4rem] bg-gray-100 rounded shadow-sm;
-    /*background-image: url("../assets/ednaldo0001.png");*/
+    @apply w-[5rem] h-[7.4rem] bg-gray-100 rounded;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.slot-carta-mao {
+    @apply w-[5rem] h-[7.4rem] shadow-md hover:-translate-y-2 transition-all ease-in-out cursor-pointer;
     background-size: cover;
     background-repeat: no-repeat;
 }

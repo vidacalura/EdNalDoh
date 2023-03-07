@@ -13,7 +13,8 @@ app.use(express.json());
 
 /* Rotas */
 app.get("/", (req, res) => {
-    const codigoSala = Math.ceil(Math.random() * 10) * 1000 + Math.ceil(Math.random() * 100);
+    const codigoSala = Math.ceil(Math.random() * 10) * 1000 + Math.ceil(Math.random() * 1000);
+    // Checar se sala já existe
     res.redirect(307, `/jogo/${codigoSala}`);
 });
 
@@ -96,6 +97,7 @@ async function iniciarPartida(sala) {
     .then((res) => { return res.json(); })
     .then((res) => {
         io.sockets.emit("iniciarPartida", (res));
+        io.sockets.emit("notificacaoJogoMudanca", null);
     })
     .catch((err) => {
         console.log(err);

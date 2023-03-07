@@ -9,4 +9,6 @@ de combate e cartas.
 ## Feito por:
 
 Backend & Frontend - <a href="https://github.com/vidacalura/"> vidacalura </a>
+
+
 UI/UX design - <a href="https://github.com/TulioTheGreat"> TulioTheGreat </a>
